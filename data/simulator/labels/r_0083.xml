@@ -1,0 +1,24 @@
+<annotation>
+	<filename>r_0083.jpg</filename>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>800</width>
+		<height>600</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>Red</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>13</xmin>
+			<ymin>557</ymin>
+			<xmax>23</xmax>
+			<ymax>581</ymax>
+		</bndbox>
+	</object>
+</annotation>

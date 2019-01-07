@@ -1,0 +1,36 @@
+<annotation>
+	<filename>r_0066.jpg</filename>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>800</width>
+		<height>600</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>Red</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>246</xmin>
+			<ymin>173</ymin>
+			<xmax>322</xmax>
+			<ymax>329</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>Red</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>546</xmin>
+			<ymin>185</ymin>
+			<xmax>622</xmax>
+			<ymax>341</ymax>
+		</bndbox>
+	</object>
+</annotation>

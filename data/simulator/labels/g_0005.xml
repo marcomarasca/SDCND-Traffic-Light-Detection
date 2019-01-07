@@ -1,0 +1,36 @@
+<annotation>
+	<filename>g_0005.jpg</filename>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>800</width>
+		<height>600</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>Green</name>
+		<pose>Unspecified</pose>
+		<truncated>1</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>1</xmin>
+			<ymin>15</ymin>
+			<xmax>66</xmax>
+			<ymax>223</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>Green</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>378</xmin>
+			<ymin>17</ymin>
+			<xmax>482</xmax>
+			<ymax>231</ymax>
+		</bndbox>
+	</object>
+</annotation>

@@ -1,0 +1,36 @@
+<annotation>
+	<filename>y_0089.jpg</filename>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>800</width>
+		<height>600</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>Yellow</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>40</xmin>
+			<ymin>525</ymin>
+			<xmax>55</xmax>
+			<ymax>556</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>Yellow</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>97</xmin>
+			<ymin>526</ymin>
+			<xmax>112</xmax>
+			<ymax>557</ymax>
+		</bndbox>
+	</object>
+</annotation>

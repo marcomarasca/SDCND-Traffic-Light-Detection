@@ -1,0 +1,6 @@
+.ipynb_checkpoints/
+object_detection/
+slim/
+temp/
+models/
+protoc.exe

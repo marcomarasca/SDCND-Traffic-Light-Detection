@@ -1,0 +1,36 @@
+<annotation>
+	<filename>y_0107.jpg</filename>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>800</width>
+		<height>600</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>Yellow</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>639</xmin>
+			<ymin>72</ymin>
+			<xmax>728</xmax>
+			<ymax>262</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>Yellow</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>261</xmin>
+			<ymin>49</ymin>
+			<xmax>354</xmax>
+			<ymax>246</ymax>
+		</bndbox>
+	</object>
+</annotation>
