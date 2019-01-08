@@ -16,13 +16,17 @@ We use the [TensorFlow Object Detection API](https://github.com/tensorflow/model
 Dataset
 ---
 
-Various datasets for the tasks are available, including the [Bosch Small Traffic Light Dataset](https://hci.iwr.uni-heidelberg.de/node/6132). For this task we decided to perform transfer learning on some well known models on a small set of manually labelled images that were captured in different conditions (simulator and real world).
+Various datasets for the tasks are available, including the [Bosch Small Traffic Light Dataset](https://hci.iwr.uni-heidelberg.de/node/6132) and publicly available datasets from other students working on the same project can also be used for validation or training, including the dataset provided by [ColdKnight](https://github.com/coldKnight/TrafficLight_Detection-TensorFlowAPI#get-the-dataset).
 
-Some publicly available datasets from other students working on the same project can also be used for validation or training, including the dataset provided by [ColdKnight](https://github.com/coldKnight/TrafficLight_Detection-TensorFlowAPI#get-the-dataset).
+For this task we decided to perform transfer learning on some [well known models](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md) using a small dataset of mixed manually annotated and semi-automatically annotated images that were collected from the udacity simulator and the ros bags provided for training.
 
-The images were labelled with [LabelImg](https://github.com/tzutalin/labelImg) and can be found in this repository with their annotations.
+The images manually annotated were labelled with [LabelImg](https://github.com/tzutalin/labelImg) while for the semi-automatic annotation a small [utility](./label_data.py) was created that runs one of the pretrained models on a set of images capturing the bounding boxes and labelling them with a predefined label:
 
-The repository contains a small [utility](./create_tf_record.py) (loosely based on the [TensorFlow object detection api](https://github.com/tensorflow/models/tree/master/research/object_detection) tool) that converts the annotated images into a [TensorFlow Record](https://www.tensorflow.org/tutorials/load_data/tf-records). For more details on TF Records see https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/using_your_own_dataset.md:
+```sh
+$ python label_data.py --data_dir=data\simulator\red --label=red --model_path=models\ssd_inception_v2_coco_2018_01_28\frozen_inference_graph.pb
+```
+
+In order to train the model using the object detection API the images needs to be fed as a [TensorFlow Record](https://www.tensorflow.org/tutorials/load_data/tf-records), the repository contains a small [utility](./create_tf_record.py) (loosely based on the [TensorFlow object detection api](https://github.com/tensorflow/models/tree/master/research/object_detection) tool) that converts the annotated images into a [TensorFlow Record](https://www.tensorflow.org/tutorials/load_data/tf-records) optionally splitting the dataset into train and validation. For more details on TF Records see https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/using_your_own_dataset.md:
 
 ```sh
 $ python create_tf_record.py --data_dir=data\simulator --labels_dir=data\simulator\labels --labels_map_path=config\labels_map.pbtxt --output_path=data\simulator\simulator.record
@@ -55,13 +59,13 @@ In order to train the model we use the [TensorFlow Object Detection API](https:/
     If you run into ["TypeError: can't pickle dict_values objects"](https://github.com/tensorflow/models/issues/4780) look into object_detection\model_lib.py for ```category_index.values()``` and replace with ```list(category_index.values())```
 
 
-4. [Run](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/running_locally.md) the training session:
+5. [Run](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/running_locally.md) the training session:
 
     ```
     python object_detection\model_main.py --pipeline_config_path=path/to/the/model/config --model_dir=path/to/the/output
     ```
 
-5. Watch it happen with tensorboard:
+6. Watch it happen with tensorboard:
 
         tensorboard --logdir=path/to/the/output
 
