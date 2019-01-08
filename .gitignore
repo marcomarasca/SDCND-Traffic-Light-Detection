@@ -5,3 +5,4 @@ temp/
 models/
 protoc.exe
 .vscode
+data/simulator/
