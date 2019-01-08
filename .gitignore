@@ -4,3 +4,4 @@ slim/
 temp/
 models/
 protoc.exe
+.vscode
