@@ -22,7 +22,11 @@ Some publicly available datasets from other students working on the same project
 
 The images were labelled with [LabelImg](https://github.com/tzutalin/labelImg) and can be found in this repository with their annotations.
 
-The repository contains a small [utility](./create_tf_record.py) (loosely based on the [TensorFlow object detection api](https://github.com/tensorflow/models/tree/master/research/object_detection) tool) that converts the annotated images into a [TensorFlow Record](https://www.tensorflow.org/tutorials/load_data/tf-records). For more details on TF Records see https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/using_your_own_dataset.md.
+The repository contains a small [utility](./create_tf_record.py) (loosely based on the [TensorFlow object detection api](https://github.com/tensorflow/models/tree/master/research/object_detection) tool) that converts the annotated images into a [TensorFlow Record](https://www.tensorflow.org/tutorials/load_data/tf-records). For more details on TF Records see https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/using_your_own_dataset.md:
+
+```sh
+$ python create_tf_record.py --data_dir=data\simulator --labels_dir=data\simulator\labels --labels_map_path=config\labels_map.pbtxt --output_path=data\simulator\simulator.record
+```
 
 Training
 ---
