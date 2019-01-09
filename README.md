@@ -3,7 +3,7 @@
 
 Overview
 ---
-The repository contains the instructions and datasets for the pipeline used in training an *object detector* for traffic lights to be integrated into the final [Capstone project](https://github.com/aviralksingh/CarND-SuperAI-Capstone) of the Udacity Self Driving Car Nanodegree.
+The repository contains the instructions and links to the datasets for the pipeline used in training an *object detector* for traffic lights to be integrated into the final [Capstone project](https://github.com/aviralksingh/CarND-SuperAI-Capstone) of the Udacity Self Driving Car Nanodegree.
 
 The project requires to detect traffic lights from the image send by the onboard camera and classify the detections into the 3 available categories: green, yellow and red so that the car can decide on how to behave in proximity of traffic lights.
 
@@ -16,9 +16,11 @@ We use the [TensorFlow Object Detection API](https://github.com/tensorflow/model
 Dataset
 ---
 
-Various datasets for the tasks are available, including the [Bosch Small Traffic Light Dataset](https://hci.iwr.uni-heidelberg.de/node/6132) and publicly available datasets from other students working on the same project can also be used for validation or training, including the dataset provided by [ColdKnight](https://github.com/coldKnight/TrafficLight_Detection-TensorFlowAPI#get-the-dataset).
+TLDR; The datasets used for training can be downloaded from [here](https://drive.google.com/open?id=1NXqHTnjVC1tPjAB5DajGc30uWk5VPy7C).
 
-For this task we decided to perform transfer learning on some [well known models](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md) using a small dataset of mixed manually annotated and semi-automatically annotated images that were collected from the udacity simulator and the ros bags provided for training.
+Other datasets for the tasks are available, including the [Bosch Small Traffic Light Dataset](https://hci.iwr.uni-heidelberg.de/node/6132) and publicly available datasets from other students working on the same project can also be used for validation or training, including the dataset provided by [ColdKnight](https://github.com/coldKnight/TrafficLight_Detection-TensorFlowAPI#get-the-dataset).
+
+For this task we decided to perform transfer learning on some [well known models](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md) using a relatively small dataset of mixed manually annotated and semi-automatically annotated images that were collected from the both the [Udacity Simulator](https://github.com/udacity/CarND-Capstone/releases) and the ros bags provided for training.
 
 The images manually annotated were labelled with [LabelImg](https://github.com/tzutalin/labelImg) while for the semi-automatic annotation a small [utility](./label_data.py) was created that runs one of the pretrained models on a set of images capturing the bounding boxes and labelling them with a predefined label:
 
@@ -26,11 +28,15 @@ The images manually annotated were labelled with [LabelImg](https://github.com/t
 $ python label_data.py --data_dir=data\simulator\red --label=red --model_path=models\ssd_inception_v2_coco_2018_01_28\frozen_inference_graph.pb
 ```
 
-In order to train the model using the object detection API the images needs to be fed as a [TensorFlow Record](https://www.tensorflow.org/tutorials/load_data/tf-records), the repository contains a small [utility](./create_tf_record.py) (loosely based on the [TensorFlow object detection api](https://github.com/tensorflow/models/tree/master/research/object_detection) tool) that converts the annotated images into a [TensorFlow Record](https://www.tensorflow.org/tutorials/load_data/tf-records) optionally splitting the dataset into train and validation. For more details on TF Records see https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/using_your_own_dataset.md:
+Note that all the annotations in the dataset were manually verified and/or adjusted.
+
+In order to train the model using the object detection API the images needs to be fed as a [TensorFlow Record](https://www.tensorflow.org/tutorials/load_data/tf-records), the repository contains a small [utility](./create_tf_record.py) (loosely based on the [TensorFlow object detection api](https://github.com/tensorflow/models/tree/master/research/object_detection) tool) that converts the annotated images into a [TensorFlow Record](https://www.tensorflow.org/tutorials/load_data/tf-records) optionally splitting the dataset into train and validation:
 
 ```sh
 $ python create_tf_record.py --data_dir=data\simulator --labels_dir=data\simulator\labels --labels_map_path=config\labels_map.pbtxt --output_path=data\simulator\simulator.record
 ```
+
+For more details about the conversion to TF Records see https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/using_your_own_dataset.md.
 
 Training
 ---
