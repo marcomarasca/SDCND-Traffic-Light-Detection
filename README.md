@@ -78,4 +78,10 @@ In order to train the model we use the [TensorFlow Object Detection API](https:/
 
     And open the browser to `http://{machine_ip}:6006`
 
+#### AWS
 
+To train on AWS I used the Amazon Deep Learning AMI (v20 with tensorflow 1.12) and g3s.xlarge instance type (it has a more recent GPU and costs less than other GPU instances even though less ram).
+
+The process is similar as described above, just following the tensorflow object detection API [installation steps](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/installation.md) works fine.
+
+NOTE: If you want to see some logging in the std out just add `tf.logging.set_verbosity(tf.logging.INFO)` after the imports in [./object_detection/model_main.py](./object_detection/model_main.py)
