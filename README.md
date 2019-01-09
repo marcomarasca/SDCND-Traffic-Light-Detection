@@ -50,12 +50,12 @@ In order to train the model we use the [TensorFlow Object Detection API](https:/
    * Copy the ```research\object_detection``` and ```research\slim``` folders to the root folder
    * Get a copy of the [Protobuff Compiler](https://github.com/protocolbuffers/protobuf/) (e.g. For [Windows](https://github.com/protocolbuffers/protobuf/releases/download/v3.4.0/protoc-3.4.0-win32.zip))
    * Compile the protcol buffers: ```protoc.exe object_detection/protos/*.proto --python_out=.```
-   * Set your PYTHONPATH: ```SET PYTHONPATH=%cd%;%cd%\slim```
+   * Set your PYTHONPATH: ```SET PYTHONPATH=%cd%;%cd%\slim``` (windows) or ```export PYTHONPATH=$PYTHONPATH:`pwd`:`pwd`/slim``` (linux) 
    * Test that the API is installed: ```python object_detection/builders/model_builder_test.py```
 
 3. [Configure the pipeline](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/configuring_jobs.md), copies of the configurations used can be found in the [config](./config) folder.
 
-4. Install the [COCO Api](https://github.com/cocodataset/cocoapi), if you run into ["ImportError: No module named 'pycocotools'"](https://github.com/matterport/Mask_RCNN/issues/6):
+4. Install the [COCO Api](https://github.com/cocodataset/cocoapi), if you run into ["ImportError: No module named 'pycocotools'"](https://github.com/matterport/Mask_RCNN/issues/6) under windows:
 
     ```
     pip install Cython
@@ -77,4 +77,5 @@ In order to train the model we use the [TensorFlow Object Detection API](https:/
 
 
     And open the browser to `http://{machine_ip}:6006`
+
 
