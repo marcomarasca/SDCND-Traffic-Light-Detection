@@ -147,7 +147,8 @@ Once the instance is up and running we need to prepare the environment:
     tar -xzvf ssd_inception_v2_coco_2018_01_28.tar.gz
     cd ..
     ```
-5. Run the training:
+5. Download the dataset from https://drive.google.com/open?id=1NXqHTnjVC1tPjAB5DajGc30uWk5VPy7C and upload the record files to the `data` folder
+6. Run the training:
     ```sh
     python object_detection/model_main.py --pipeline_config_path=config/ssd_inception_v2_coco_mixed.config --model_dir=models/fine_tuned/ssd_inception
     ```
@@ -157,7 +158,7 @@ Once the instance is up and running we need to prepare the environment:
     ```
     nohup python -u object_detection/model_main.py --pipeline_config_path=config/ssd_inception_v2_coco_mixed.config --model_dir=models/fine_tuned/ssd_inception > training.log &
     ```
-6. Run tensorboard:
+7. Run tensorboard:
    ```sh
    tensorboard --logdir=models/fine_tuned
    ```
