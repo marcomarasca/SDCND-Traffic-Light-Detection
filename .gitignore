@@ -5,5 +5,4 @@ temp/
 models/
 protoc.exe
 .vscode
-data/simulator/
-data/carla/
+data/
