@@ -55,14 +55,16 @@ In order to train the model we use the [TensorFlow Object Detection API](https:/
 
 3. [Configure the pipeline](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/configuring_jobs.md), copies of the configurations used can be found in the [config](./config) folder.
 
-4. Install the [COCO Api](https://github.com/cocodataset/cocoapi), if you run into ["ImportError: No module named 'pycocotools'"](https://github.com/matterport/Mask_RCNN/issues/6) under windows:
+4. Install the [COCO Api](https://github.com/cocodataset/cocoapi) 
+    
+    * If you run into ["ImportError: No module named 'pycocotools'"](https://github.com/matterport/Mask_RCNN/issues/6) under windows:
 
-    ```
-    pip install Cython
-    pip install git+https://github.com/philferriere/cocoapi.git#egg=pycocotools^&subdirectory=PythonAPI
-    ```
+        ```
+        pip install Cython
+        pip install git+https://github.com/philferriere/cocoapi.git#egg=pycocotools^&subdirectory=PythonAPI
+        ```
 
-    If you run into ["TypeError: can't pickle dict_values objects"](https://github.com/tensorflow/models/issues/4780) look into object_detection\model_lib.py for ```category_index.values()``` and replace with ```list(category_index.values())```
+    * If you run into ["TypeError: can't pickle dict_values objects"](https://github.com/tensorflow/models/issues/4780) look into object_detection\model_lib.py for ```category_index.values()``` and replace with ```list(category_index.values())```
 
 
 5. [Run](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/running_locally.md) the training session:
@@ -78,10 +80,116 @@ In order to train the model we use the [TensorFlow Object Detection API](https:/
 
     And open the browser to `http://{machine_ip}:6006`
 
-#### AWS
+### Configuration Files
 
-To train on AWS I used the Amazon Deep Learning AMI (v20 with tensorflow 1.12) and g3s.xlarge instance type (it has a more recent GPU and costs less than other GPU instances even though less ram).
+The repository contains various configuration files for the different datasets (mixed is the simulator + carla dataset) for different models, the things that I changed from the samples provided by tensorflow are:
 
-The process is similar as described above, just following the tensorflow object detection API [installation steps](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/installation.md) works fine.
+* The various training and validation paths of the tf records (e.g. input_path elements)
+* The label_map_path
+* The num_classes
+* The num_steps
+* The num_examples in the evaluation section that correspond to the number of samples in the evaluation record
+* The ssd_anchor_generator section, updating the scales and removing unused aspect ratios (the traffic lights are more or less 0.33)
+
+### AWS
+
+To train on AWS I used the Amazon Deep Learning AMI (v20 with tensorflow 1.12) and GPU graphics g3s.xlarge instance type (it has a more recent GPU and costs less than other GPU instances even though less ram), alternatively the GPU Compute p2.xlarge works fine (it's a tiny bit more expensive). I used spot instances with 5-6 hours request length (making sure to uncheck the delete volume option).
+
+Once the instance is up and running we need to prepare the environment:
+
+1. Connect to the instance:
+   ```sh
+   $ ssh ubuntu@instance-public-dns
+   ```
+2. Activate the tensorflow environment:
+   ```sh
+   $ source activate tensorflow_p36
+   ```
+3. Install the object detection API (E.g. From the linux [installation steps](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/installation.md)):
+   * Get the object detection API:
+       ```sh
+       git clone https://github.com/tensorflow/models.git tmp
+       cp -r tmp/research/object_detection object_detection/
+       cp -r tmp/research/slim slim/
+       ```
+   * Install dependencies:
+        ```sh
+        sudo apt-get install protobuf-compiler python-pil python-lxml python-tk
+        pip install --user Cython
+        pip install --user contextlib2
+        pip install --user jupyter
+        pip install --user matplotlib
+        ```
+    * Install the coco API:
+        ```sh
+        git clone https://github.com/cocodataset/cocoapi.git
+        cd cocoapi/PythonAPI
+        make
+        cp -r pycocotools ../../pycocotools
+        ``` 
+    * Compile the proto buffers:
+        ```sh
+        protoc object_detection/protos/*.proto --python_out=.
+        ``` 
+    * Add the library to PYTHONPATH (Note: this expires with the session, put it in a script):
+        ```sh
+        export PYTHONPATH=$PYTHONPATH:`pwd`:`pwd`/slim
+        ````
+    * Test the installation:
+        ```sh
+        python object_detection/builders/model_builder_test.py
+        ```
+4. Download a model, for example SSD with Inception:
+    ```sh
+    mkdir models
+    cd models
+    wget http://download.tensorflow.org/models/object_detection/ssd_inception_v2_coco_2018_01_28.tar.gz
+    tar -xzvf ssd_inception_v2_coco_2018_01_28.tar.gz
+    cd ..
+    ```
+5. Run the training:
+    ```sh
+    python object_detection/model_main.py --pipeline_config_path=config/ssd_inception_v2_coco_mixed.config --model_dir=models/fine_tuned/ssd_inception
+    ```
+    
+    If you want to run in it background:
+    
+    ```
+    nohup python -u object_detection/model_main.py --pipeline_config_path=config/ssd_inception_v2_coco_mixed.config --model_dir=models/fine_tuned/ssd_inception > training.log &
+    ```
+6. Run tensorboard:
+   ```sh
+   tensorboard --logdir=models/fine_tuned
+   ```
+
+   or in background:
+
+   ```sh
+   nohup tensorboard --logdir=models/fine_tuned > tensorboard.log &
+   ```
 
 NOTE: If you want to see some logging in the std out just add `tf.logging.set_verbosity(tf.logging.INFO)` after the imports in [./object_detection/model_main.py](./object_detection/model_main.py)
+
+If your spot instance is stopped while training and you made sure to uncheck the "delete volume" option when requesting the spot instance, your volume will be retained and you can continue the training from a previous checkpoint:
+
+1. Request a new instance
+2. Go to the volumes and attach the previous volume to the new instance
+3. Connect to the instance and mount the previous volume:
+
+    ```sh
+    mkdir /prev_volume
+    sudo mount /dev/xvdf1 /prev_volume
+    ```
+
+    Note that the device name `xvdf1` can be found running `lsblk`.
+4. Copy the old model to the new instance
+   
+   ```sh
+    cp -r /prev_volume/home/ubuntu/models/fine_tuned /models/fine_tuned
+    ```
+
+5. Run the training with the same configuration (it will pick up the last checkpoint)
+
+   ```sh
+   python object_detection/model_main.py --pipeline_config_path=config/ssd_inception_v2_coco_mixed.config --model_dir=models/fine_tuned/ssd_inception
+   ```
