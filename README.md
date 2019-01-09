@@ -90,6 +90,7 @@ The repository contains various configuration files for the different datasets (
 * The num_steps
 * The num_examples in the evaluation section that correspond to the number of samples in the evaluation record
 * The ssd_anchor_generator section, updating the scales and removing unused aspect ratios (the traffic lights are more or less 0.33)
+* Reduced the number of detections from 100 to 10 in max_detections_per_class and max_total_detections
 
 ### AWS
 
