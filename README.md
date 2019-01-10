@@ -24,19 +24,23 @@ The dataset is composed of images coming from 4 source:
 
 * **The udacity simulator**
 
-    ![alt text](./images/sim_g.jpg)![alt text](./images/sim_r.jpg)![alt text](./images/sim_y.jpg)
+    ![alt text](./images/sim_g.jpg)![alt text](./images/sim_r.jpg)
+    ![alt text](./images/sim_y.jpg)![alt text](./images/sim_u.jpg)
 
 * A **training bag** file with a video of traffic lights provided by Udacity as training ([Download](https://s3-us-west-1.amazonaws.com/udacity-selfdrivingcar/traffic_light_bag_file.zip))
 
-    ![alt text](./images/uda_training_g.jpg)![alt text](./images/uda_training_r.jpg)![alt text](./images/uda_training_y.jpg)
+    ![alt text](./images/uda_training_g.jpg)![alt text](./images/uda_training_r.jpg)
+    ![alt text](./images/uda_training_y.jpg)![alt text](./images/uda_training_u.jpg)
 
 * A **traffic lights bag** file file with a video of traffic lights only, recorded on the Carla testing site ([Download](https://drive.google.com/file/d/0B2_h37bMVw3iYkdJTlRSUlJIamM/view?usp=sharing))
 
-    ![alt text](./images/uda_lights_g.jpg)![alt text](./images/uda_lights_r.jpg)![alt text](./images/uda_lights_y.jpg)
+    ![alt text](./images/uda_lights_g.jpg)![alt text](./images/uda_lights_r.jpg)
+    ![alt text](./images/uda_lights_y.jpg)![alt text](./images/uda_lights_u.jpg)
 
 * A **loop bag** file file with a video of a complete loop, recorded on the Carla testing site ([Download (Same as above)](https://drive.google.com/file/d/0B2_h37bMVw3iYkdJTlRSUlJIamM/view?usp=sharing))
 
-    ![alt text](./images/uda_loop_g.jpg)![alt text](./images/uda_loop_r.jpg)![alt text](./images/uda_loop_u.jpg)
+    ![alt text](./images/uda_loop_g.jpg)![alt text](./images/uda_loop_r.jpg)
+    ![alt text](./images/uda_loop_u.jpg)![alt text](./images/uda_loop_u_2.jpg)
 
 The images manually annotated were labelled with [LabelImg](https://github.com/tzutalin/labelImg) while for the **semi-automatic annotation** a small [utility](./label_data.py) is included that runs one of the tensorflow pretrained models on a set of images capturing the bounding boxes and labelling them with a predefined label:
 
