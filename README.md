@@ -104,7 +104,6 @@ The models that we took into consideration come from the [model zoo](https://git
 | ------------ | :--------------: | :--------------: | :--------------: | :--------------: |
 | [ssd_mobilenet_v1_coco](http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v1_coco_2018_01_28.tar.gz) | 30 | 21 | [Download](https://raw.githubusercontent.com/tensorflow/models/master/research/object_detection/samples/configs/ssd_mobilenet_v1_coco.config) | [Download](https://raw.githubusercontent.com/Az4z3l/CarND-Traffic-Light-Detection/master/config/ssd_mobilenet_v1.config)
 | [ssd_inception_v2_coco](http://download.tensorflow.org/models/object_detection/ssd_inception_v2_coco_2018_01_28.tar.gz) | 42 | 24 | [Download](https://raw.githubusercontent.com/tensorflow/models/master/research/object_detection/samples/configs/ssd_inception_v2_coco.config) | [Download](https://raw.githubusercontent.com/Az4z3l/CarND-Traffic-Light-Detection/master/config/ssd_inception_v2.config)
-| [ssd_mobilenet_v2_coco](http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v2_coco_2018_03_29.tar.gz) | 31 | 22 | [Download](https://raw.githubusercontent.com/tensorflow/models/master/research/object_detection/samples/configs/ssd_mobilenet_v2_coco.config) | [Download](https://raw.githubusercontent.com/Az4z3l/CarND-Traffic-Light-Detection/master/config/ssd_mobilenet_v2.config)
 | [ssdlite_mobilenet_v2_coco](http://download.tensorflow.org/models/object_detection/ssdlite_mobilenet_v2_coco_2018_05_09.tar.gz) | 27 | 22 | [Download](https://raw.githubusercontent.com/tensorflow/models/master/research/object_detection/samples/configs/ssdlite_mobilenet_v2_coco.config) | [Download](https://raw.githubusercontent.com/Az4z3l/CarND-Traffic-Light-Detection/master/config/ssdlite_mobilenet_v2.config)
 
 #### Configuration Files
@@ -380,7 +379,6 @@ a [jupyter notebook is included](./notebooks/evaluation.ipynb) that simply runs 
 | ssd_mobilenet_v1          |                      |                      |                |           |                |           |
 | ssd_inception_v2          |                      |                      |                |           |                |           |
 | **ssd_inception_v2_sim*** |                      |                      |                |           |                |           |
-| ssd_mobilenet_v2          |                      |                      |                |           |                |           |
 | ssdlite_mobilenet_v2      |                      |                      |                |           |                |           |
 
 
