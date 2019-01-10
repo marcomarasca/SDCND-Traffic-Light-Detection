@@ -93,6 +93,8 @@ def main(unused_argv):
     label_files_train = [os.path.join(FLAGS.labels_dir, file_name) for file_name in label_files_train]
     output_path_train = FLAGS.output_path
     split_train_test = FLAGS.split_train_test
+
+    print('Total samples: {}'.format(len(label_files_train)))
     
     if split_train_test:
         label_files_train, label_files_eval = train_test_split(label_files_train, test_size = split_train_test, shuffle = True)
@@ -105,8 +107,6 @@ def main(unused_argv):
         
         if file_name_split[1] == '':
             file_name_split = (file_name_split[0], '.record')
-
-        print(file_name_split)
 
         output_path_train = os.path.join(dir_path, '{}_train{}'.format(file_name_split[0], file_name_split[1]))
         output_path_eval = os.path.join(dir_path, '{}_eval{}'.format(file_name_split[0], file_name_split[1]))
