@@ -195,3 +195,48 @@ If your spot instance is stopped while training and you made sure to uncheck the
    ```sh
    python object_detection/model_main.py --pipeline_config_path=config/ssd_inception_v2_coco_mixed.config --model_dir=models/fine_tuned/ssd_inception
    ```
+
+Export Model
+---
+
+In order to use the model for inference in production the graph must be freezed, the tensorflow object API comes with an handy utility to export the frozen model (See https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/exporting_models.md):
+
+```sh
+python object_detection/export_inference_graph.py --input_type image_tensor --pipeline_config_path config/ssd_inception_v2_coco.config --trained_checkpoint_prefix models/fine_tuned/ssd_inception/model.ckpt --output_directory models/fine_tuned/ssd_inception/exported
+```
+
+This will create a `frozen_inference_graph.pb` graph that can be loaded from tensorflow:
+
+```python
+
+import tensorflow as tf
+import os
+
+file_path = os.path.join('models', 'fine_tuned', 'ssd_inception', 'frozen_inference_graph.pb')
+detection_graph = tf.Graph()
+
+with detection_graph.as_default():
+    od_graph_def = tf.GraphDef()
+    with tf.gfile.GFile(file_path, 'rb') as fid:
+        serialized_graph = fid.read()
+        od_graph_def.ParseFromString(serialized_graph)
+        tf.import_graph_def(od_graph_def, name='')
+
+```
+
+And later used in a session as follow:
+
+```python
+with detection_graph.as_default():
+    image_tensor = graph.get_tensor_by_name('image_tensor:0')
+    boxes_tensor = graph.get_tensor_by_name('detection_boxes:0')
+    scores_tensor = graph.get_tensor_by_name('detection_scores:0')
+    classes_tensor = graph.get_tensor_by_name('detection_classes:0')
+    detections_tensor = graph.get_tensor_by_name('num_detections:0')
+
+    ops = [detections_tensor, boxes_tensor, scores_tensor, classes_tensor]
+
+    with tf.Session() as sess:
+        num_detections, boxes, scores, classes = sess.run(ops, feed_dict={image_tensor: image})
+
+```
