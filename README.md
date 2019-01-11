@@ -1,5 +1,5 @@
 # Traffic Light Detection <!-- omit in toc --> 
-[![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)] (http://www.udacity.com/drive) <!-- omit in toc --> 
+[![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive) <!-- omit in toc --> 
 ---
 
 ## Table of Contents <!-- omit in toc --> 
