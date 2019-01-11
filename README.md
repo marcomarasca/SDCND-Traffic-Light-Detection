@@ -388,7 +388,7 @@ If your spot instance is stopped while training and you made sure to uncheck the
 
 Google provides the [Colab](https://colab.research.google.com) space to run interactive jupyter notebooks with GPU enabled VMs, it's an handy environment for experimenting, the repository contains a custom jupyter notebook that can be used to train the models using the tensorflow object detection API directly on Google Colab: [colab_training.ipynb](./notebooks/colab_training.ipynb).
 
-Simply import the notebook in your colab space and change the `train_file_id` and `eval_file_id` to match the id of the `mixed_train.record` and `mixed_eval.record` in your google drive so that they can be downloaded in the colab workspace. In order to get the id of the files in google drive simply obtain a sharable link and copy the id from the link.
+Simply import the notebook in your colab space, activate the GPU (under file->settings) and change the `train_file_id` and `eval_file_id` to match the id of the `mixed_train.record` and `mixed_eval.record` in your google drive so that they can be downloaded in the colab workspace. In order to get the id of the files in google drive simply obtain a sharable link and copy the id from the link.
 
 Export Model
 ---
