@@ -119,6 +119,7 @@ The models that we took into consideration come from the [model zoo](https://git
 | Model name  | Reported Speed (ms) | Reported COCO mAP[^1] | Template Config | Repo Config |
 | ------------ | :--------------: | :--------------: | :--------------: | :--------------: |
 | [ssd_mobilenet_v1_coco](http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v1_coco_2018_01_28.tar.gz) | 30 | 21 | [Download](https://raw.githubusercontent.com/tensorflow/models/master/research/object_detection/samples/configs/ssd_mobilenet_v1_coco.config) | [Download](https://raw.githubusercontent.com/Az4z3l/CarND-Traffic-Light-Detection/master/config/ssd_mobilenet_v1.config)
+| [ssd_mobilenet_v2_coco](http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v2_coco_2018_03_29.tar.gz) | 31 | 22 | [Download](https://raw.githubusercontent.com/tensorflow/models/master/research/object_detection/samples/configs/ssd_mobilenet_v2_coco.config) | [Download](https://raw.githubusercontent.com/Az4z3l/CarND-Traffic-Light-Detection/master/config/ssd_mobilenet_v2.config)
 | [ssd_inception_v2_coco](http://download.tensorflow.org/models/object_detection/ssd_inception_v2_coco_2018_01_28.tar.gz) | 42 | 24 | [Download](https://raw.githubusercontent.com/tensorflow/models/master/research/object_detection/samples/configs/ssd_inception_v2_coco.config) | [Download](https://raw.githubusercontent.com/Az4z3l/CarND-Traffic-Light-Detection/master/config/ssd_inception_v2.config)
 | [ssdlite_mobilenet_v2_coco](http://download.tensorflow.org/models/object_detection/ssdlite_mobilenet_v2_coco_2018_05_09.tar.gz) | 27 | 22 | [Download](https://raw.githubusercontent.com/tensorflow/models/master/research/object_detection/samples/configs/ssdlite_mobilenet_v2_coco.config) | [Download](https://raw.githubusercontent.com/Az4z3l/CarND-Traffic-Light-Detection/master/config/ssdlite_mobilenet_v2.config)
 
@@ -187,6 +188,12 @@ eval_input_reader: {
   num_readers: 1
 }
 ```
+
+All the models were trained on AWS instances with the following common configuration:
+
+| Batch Size | Steps | Learning Rate | Anchors Min Scale | Anchors Max Scale | Anchors Aspect Ratio |
+|------------|-------|---------------|-------------------|-------------------|----------------------|
+| 24         | 20000 | 0.004         | 0.1               | 0.5               | 0.33                 |
 
 #### Locally
 
@@ -524,20 +531,27 @@ To convert the model we use the following procedure (using conda and tensorflow 
 Evaluation
 ---
 
-For the evaluation of the model we are interested in the classification of the images rather than the accuracy of the predicted box,
-a [jupyter notebook is included](./notebooks/evaluation.ipynb) that simply runs the trained models on the set of images and computes the accuracy (in terms of correctly classified samples/total samples). The evaluation includes also "background" images that do not contain any traffic light to test for false positives. The accuracy is measured on both images from the *simulator* and images from the *test site*, the system configuration for the evaluation is as follows:
+All the models were trained with a similar configuration and the following common parameters:
 
-* **CPU:** Intel I7 8650U (base@2.11GHz, boost@4.2GHz)
-* **RAM:** 16 GB
-* **GPU:** Nvidia GTX 1050 2GB (base@1.354GHz, boost@1.493GHz)
+| Batch Size | Steps | Learning Rate | Anchors Min Scale | Anchors Max Scale | Anchors Aspect Ratio |
+|------------|-------|---------------|-------------------|-------------------|----------------------|
+| 24         | 20000 | 0.004         | 0.1               | 0.5               | 0.33                 |
 
+For the evaluation of the model we are interested in the classification of the images rather than the IOU of the predicted box,
+a [jupyter notebook is included](./notebooks/evaluation.ipynb) that simply runs the trained models on the set of images and computes the accuracy (in terms of correctly classified samples/total samples). The evaluation includes also "background" images that do not contain any traffic light to test for false positives. The following system configuration was used for the evaluation:
 
-| Model                     | Accuracy (Simulator) | Accuracy (Test Site) | Avg Time (GPU) | FPS (GPU) | Avg Time (CPU) | FPS (CPU) |
-|---------------------------|----------------------|----------------------|----------------|-----------|----------------|-----------|
-| ssd_mobilenet_v1          |                      |                      |                |           |                |           |
-| ssd_inception_v2          |                      |                      |                |           |                |           |
-| **ssd_inception_v2_sim*** |                      |                      |                |           |                |           |
-| ssdlite_mobilenet_v2      |                      |                      |                |           |                |           |
+| CPU                                         | GPU                                                 | RAM  |
+|---------------------------------------------|-----------------------------------------------------|------|
+| Intel I7 8650U (base@2.11GHz, boost@4.2GHz) | Nvidia GTX 1050 2GB (base@1.354GHz, boost@1.493GHz) | 16GB |
 
+The accuracy is measured on both images from the *simulator* and images from the *test site*:
 
-\* Trained on simulator images only
+| Model                      | Accuracy (Simulator) | Accuracy (Test Site) | Avg Time (GPU) | FPS (GPU) | Avg Time (CPU) | FPS (CPU) |
+|----------------------------|----------------------|----------------------|----------------|-----------|----------------|-----------|
+| ssd_mobilenet_v1           |                      |                      |                |           |                |           |
+| ssd_mobilenet_v1           |                      |                      |                |           |                |           |
+| ssdlite_mobilenet_v2       |                      |                      |                |           |                |           |
+| ssd_inception_v2           |                      |                      |                |           |                |           |
+| **ssd_inception_v2_sim\*** |                      |                      |                |           |                |           |
+
+**\*** Trained on simulator images only
