@@ -6,3 +6,4 @@ models/
 protoc.exe
 .vscode
 data/
+convert/

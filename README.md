@@ -120,7 +120,7 @@ The repository contains various configuration files for the different datasets (
 
 For example (taken from the ssd_inception_v2 config):
 
-```json
+```
 model {
   ssd {
       num_classes: 3
@@ -179,34 +179,87 @@ The models can be trained locally following the steps below (assuming tensorflow
 1. Download the trained models from the [TensorFlow Model Zoo](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md) with their associated [pipeline configuration](https://github.com/tensorflow/models/tree/master/research/object_detection/samples/configs).
 
 2. Download the [TensorFlow Object Detection API](https://github.com/tensorflow/models/blob/master/research/object_detection) and perform the required [installation steps](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/installation.md):
-   * ```git clone https://github.com/tensorflow/models.git```
-   * Copy the ```research/object_detection``` and ```research/slim``` folders to the root folder
-   * Get a copy of the [Protobuff Compiler](https://github.com/protocolbuffers/protobuf/) (e.g. For [Windows](https://github.com/protocolbuffers/protobuf/releases/download/v3.4.0/protoc-3.4.0-win32.zip))
-   * Compile the protcol buffers: ```protoc.exe object_detection/protos/*.proto --python_out=.```
-   * Set your PYTHONPATH: ```SET PYTHONPATH=%cd%;%cd%\slim``` (windows) or ```export PYTHONPATH=$PYTHONPATH:`pwd`:`pwd`/slim``` (linux) 
-   * Test that the API is installed: ```python object_detection/builders/model_builder_test.py```
+   
+      * Clone the tensorflow object models repo:
+
+           ```sh
+           git clone https://github.com/tensorflow/models.git temp
+           ```
+
+      * Copy temp/research/object_detection and temp/research/slim
+
+           ```sh
+           xcopy /E temp/research/object_detection object_detection
+           xcopy /E temp/research/slim slim
+           ```
+           
+           or (on linux)
+
+           ```sh
+           cp -r temp/research/object_detection object_detection
+           cp -r temp/research/slim slim
+           ```
+
+      * Install dependencies:
+
+           ```sh
+           conda install Cython contextlib2 pillow lxml matplotlib
+           ```
+
+      * Install the [COCO Api](https://github.com/cocodataset/cocoapi):
+
+            ```sh
+            pip install git+https://github.com/philferriere/cocoapi.git#egg=pycocotools^&subdirectory=PythonAPI
+            ```
+
+            or (under linux)
+
+            ```sh
+            git clone https://github.com/cocodataset/cocoapi.git
+            cd cocoapi/PythonAPI
+            cp -r pycocotools ../../
+            ```
+
+      * Download protoc 3.4.0 and extract the protoc executable:
+
+            https://github.com/protocolbuffers/protobuf/releases/download/v3.4.0
+
+      *  Compile proto buffers:
+
+           ```sh
+           protoc object_detection/protos/*.proto --python_out=.
+           ```
+
+      *  Set PYTHONPATH:
+
+           ```sh
+           SET PYTHONPATH=%cd%;%cd%\slim
+           ```
+
+           or (on linux)
+
+           ```sh
+           export PYTHONPATH=$PYTHONPATH:`pwd`:`pwd`/slim
+           ``` 
+
+      *  Run tests:
+
+            ```sh
+            python object_detection/builders/model_builder_test.py
+            ```
+
+            If you run into ["TypeError: can't pickle dict_values objects"](https://github.com/tensorflow/models/issues/4780) look into object_detection/model_lib.py for `category_index.values()` and replace with `list(category_index.values())`
+
 
 3. [Configure the pipeline](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/configuring_jobs.md), copies of the configurations used can be found in the [config](./config) folder.
 
-4. Install the [COCO Api](https://github.com/cocodataset/cocoapi) 
-    
-    * If you run into ["ImportError: No module named 'pycocotools'"](https://github.com/matterport/Mask_RCNN/issues/6) under windows:
-
-        ```
-        pip install Cython
-        pip install git+https://github.com/philferriere/cocoapi.git#egg=pycocotools^&subdirectory=PythonAPI
-        ```
-
-    * If you run into ["TypeError: can't pickle dict_values objects"](https://github.com/tensorflow/models/issues/4780) look into object_detection/model_lib.py for ```category_index.values()``` and replace with ```list(category_index.values())```
-
-
-5. [Run](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/running_locally.md) the training session:
+4. [Run](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/running_locally.md) the training session:
 
     ```
     python object_detection/model_main.py --pipeline_config_path=path/to/the/model/config --model_dir=path/to/the/output
     ```
 
-6. Watch it happen with tensorboard:
+5. Watch it happen with tensorboard:
 
         tensorboard --logdir=path/to/the/output
 
@@ -228,6 +281,7 @@ Once the instance is up and running we need to prepare the environment:
    $ source activate tensorflow_p36
    ```
 3. Install the object detection API (E.g. From the linux [installation steps](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/installation.md)):
+
    * Get the object detection API:
        ```sh
        git clone https://github.com/tensorflow/models.git tmp
@@ -237,10 +291,7 @@ Once the instance is up and running we need to prepare the environment:
    * Install dependencies:
         ```sh
         sudo apt-get install protobuf-compiler python-pil python-lxml python-tk
-        pip install --user Cython
-        pip install --user contextlib2
-        pip install --user jupyter
-        pip install --user matplotlib
+        pip install Cython contextlib2 matplotlib
         ```
     * Install the coco API:
         ```sh
@@ -329,7 +380,7 @@ Export Model
 In order to use the model for inference in production the graph must be freezed, the tensorflow object API comes with an handy utility to export the frozen model (See https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/exporting_models.md):
 
 ```sh
-python object_detection/export_inference_graph.py --input_type image_tensor --pipeline_config_path config/ssd_inception_v2_coco.config --trained_checkpoint_prefix models/fine_tuned/ssd_inception/model.ckpt --output_directory models/fine_tuned/ssd_inception/exported
+python object_detection/export_inference_graph.py --input_type=image_tensor --pipeline_config_path=config/ssd_inception_v2_coco.config --trained_checkpoint_prefix=models/fine_tuned/ssd_inception/model.ckpt-20000 --output_directory=models/fine_tuned/ssd_inception/exported
 ```
 
 This will create a `frozen_inference_graph.pb` graph that can be loaded from tensorflow:
@@ -367,6 +418,90 @@ with detection_graph.as_default():
         num_detections, boxes, scores, classes = sess.run(ops, feed_dict={image_tensor: image})
 
 ```
+
+### Converting for Tensorflow 1.3 and above
+
+The models were converted using the latest version of tensorflow (1.12 at the time of writing) and the object detection api, the software stack included on Carla self-driving car include instead tensorflow 1.3. Despite what google claims the models are not alway compatible within major versions so we have to convert the frozen model using an older version of the object detection api and tensorflow. Unfortunately the object detection API only goes back to tensorflow 1.4, luckily it appears that models converted with this version are also compatible with tensorflow 1.3.
+
+To convert the model we use the following procedure (using conda and tensorflow without GPU) which is the same as to export an object, just using a different version of tensorflow and the object detection API:
+
+1. Create conda env for tensorflow 1.4: 
+    
+    ```sh
+    conda create -n tensorflow_1.4 python=3.6
+    conda activate tensorflow_1.4
+    ```
+
+2. Install tensorflow 1.4.0:
+
+    ```sh
+    conda install tensorflow==1.4.0
+    ```
+
+3. Install dependencies:
+
+    ```sh
+    conda install pillow lxml matplotlib
+    ```
+
+4. Clone the tensorflow object models repo and checkout compatible version:
+
+    ```sh
+    git clone https://github.com/tensorflow/models.git temp
+    cd temp
+    git checkout d135ed9c04bc9c60ea58f493559e60bc7673beb7
+    ```
+
+5. Copy temp/research/object_detection and temp/research/slim to the exporter
+
+    ```sh
+    mkdir exporter
+    xcopy /E temp/research/object_detection exporter/object_detection
+    xcopy /E temp/research/slim exporter/slim
+    cd exporter
+    ```
+    
+    or (on linux)
+
+    ```sh
+    mkdir exporter
+    cp -r temp/research/object_detection exporter/object_detection
+    cp -r temp/research/slim exporter/slim
+    cd exporter
+    ```
+
+6. Download protoc 3.4.0 and extract the protoc.exe into /exporter:
+
+    https://github.com/protocolbuffers/protobuf/releases/download/v3.4.0
+
+7.  Compile proto buffers:
+
+    ```sh
+    protoc.exe object_detection/protos/*.proto --python_out=.
+    ```
+
+8.  Set PYTHONPATH:
+
+    ```sh
+    SET PYTHONPATH=%cd%;%cd%\slim
+    ```
+
+    or (on linux)
+
+    ```sh
+    export PYTHONPATH=$PYTHONPATH:`pwd`:`pwd`/slim
+    ``` 
+
+9.  Run tests:
+
+    python object_detection/builders/model_builder_test.py
+
+10. Export the model(s) as before:
+
+    ```sh
+    python object_detection/export_inference_graph.py --input_type=image_tensor --pipeline_config_path=../config/ssd_inception_v2_coco.config --trained_checkpoint_prefix=../models/fine_tuned/ssd_inception/model.ckpt-20000 --output_directory=../models/exported/ssd_inception/
+    ```
+
 
 Evaluation
 ---
