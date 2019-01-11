@@ -396,7 +396,7 @@ Export Model
 In order to use the model for inference in production the graph must be freezed, the tensorflow object API comes with an handy utility to export the frozen model (See https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/exporting_models.md):
 
 ```sh
-python object_detection/export_inference_graph.py --input_type=image_tensor --pipeline_config_path=config/ssd_inception_v2_coco.config --trained_checkpoint_prefix=models/fine_tuned/ssd_inception/model.ckpt-20000 --output_directory=models/fine_tuned/ssd_inception/exported
+python object_detection/export_inference_graph.py --input_type=image_tensor --pipeline_config_path=config/ssd_inception_v2.config --trained_checkpoint_prefix=models/fine_tuned/ssd_inception_v2/model.ckpt-20000 --output_directory=models/exported/ssd_inception_v2
 ```
 
 This will create a `frozen_inference_graph.pb` graph that can be loaded from tensorflow:
@@ -517,7 +517,7 @@ To convert the model we use the following procedure (using conda and tensorflow 
 10. Export the model(s) as before:
 
     ```sh
-    python object_detection/export_inference_graph.py --input_type=image_tensor --pipeline_config_path=../config/ssd_inception_v2_coco.config --trained_checkpoint_prefix=../models/fine_tuned/ssd_inception/model.ckpt-20000 --output_directory=../models/exported/ssd_inception/
+    python object_detection/export_inference_graph.py --input_type=image_tensor --pipeline_config_path=../config/ssd_inception_v2.config --trained_checkpoint_prefix=../models/fine_tuned/ssd_inception_v2/model.ckpt-20000 --output_directory=../models/converted/ssd_inception_v2
     ```
 
 
