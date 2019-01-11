@@ -14,7 +14,7 @@
     - [AWS](#aws)
     - [Google Colab](#google-colab)
 - [Export Model](#export-model)
-  - [Converting for Tensorflow 1.3 and above](#converting-for-tensorflow-13-and-above)
+  - [Converting for Tensorflow 1.3](#converting-for-tensorflow-13)
 - [Evaluation](#evaluation)
 
 Overview
@@ -435,11 +435,13 @@ with detection_graph.as_default():
 
 ```
 
-### Converting for Tensorflow 1.3 and above
+### Converting for Tensorflow 1.3
 
-The models were converted using the latest version of tensorflow (1.12 at the time of writing) and the object detection api, the software stack included on Carla self-driving car include instead tensorflow 1.3. Despite what google claims the models are not alway compatible within major versions so we have to convert the frozen model using an older version of the object detection api and tensorflow. Unfortunately the object detection API only goes back to tensorflow 1.4, luckily it appears that models converted with this version are also compatible with tensorflow 1.3.
+The models were trained using the latest version of tensorflow (1.12 at the time of writing) and object detection api, the software stack included on Carla self-driving car include instead tensorflow 1.3. Despite what google claims the models are not always compatible within major versions so we have to convert the frozen model using an older version of the object detection api and tensorflow. Unfortunately the object detection API only goes back to tensorflow 1.4 (the previous version is in one of the commits in the original tensorflow repository) luckily it appears that models converted with this version are also compatible with tensorflow 1.3.
 
-To convert the model we use the following procedure (using conda and tensorflow without GPU) which is the same as to export an object, just using a different version of tensorflow and the object detection API:
+Note that once the model is converted it is possible to load it from tensorflow version >= 1.3.
+
+To convert the model we use the following procedure (using conda and tensorflow without GPU) which is the same as exporting a model, just using a different version of tensorflow and the object detection API:
 
 1. Create conda env for tensorflow 1.4: 
     
@@ -523,7 +525,12 @@ Evaluation
 ---
 
 For the evaluation of the model we are interested in the classification of the images rather than the accuracy of the predicted box,
-a [jupyter notebook is included](./notebooks/evaluation.ipynb) that simply runs the trained models on the set of images and computes the accuracy (in terms of correctly classified/total). The evaluation includes also "background" images that do not contain any traffic light to test for false positives. The accuracy is measured on both images from the simulator and iamges from the test site:
+a [jupyter notebook is included](./notebooks/evaluation.ipynb) that simply runs the trained models on the set of images and computes the accuracy (in terms of correctly classified samples/total samples). The evaluation includes also "background" images that do not contain any traffic light to test for false positives. The accuracy is measured on both images from the *simulator* and images from the *test site*, the system configuration for the evaluation is as follows:
+
+* **CPU:** Intel I7 8650U (base@2.11GHz, boost@4.2GHz)
+* **RAM:** 16 GB
+* **GPU:** Nvidia GTX 1050 2GB (base@1.354GHz, boost@1.493GHz)
+
 
 | Model                     | Accuracy (Simulator) | Accuracy (Test Site) | Avg Time (GPU) | FPS (GPU) | Avg Time (CPU) | FPS (CPU) |
 |---------------------------|----------------------|----------------------|----------------|-----------|----------------|-----------|
