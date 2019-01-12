@@ -1,6 +1,7 @@
 import tensorflow as tf
 from tensorflow.tools.graph_transforms import TransformGraph
 import os
+from distutils.version import LooseVersion
 
 flags = tf.app.flags
 
@@ -36,15 +37,25 @@ def optimize_graph(model_file, output_dir, input_names = ['image_tensor'], outpu
     graph_def = load_graph(model_file)
     
     graph_stats(graph_def)
-    
-    transforms = [
-        'strip_unused_nodes(type=float, shape="1,299,299,3")',
-        'remove_nodes(op=Identity, op=CheckNumerics)'
-        'fold_constants(ignore_errors=true)',
-        'fold_batch_norms',
-        'fold_old_batch_norms',
-        'obfuscate_names'
-    ]
+
+    # TODO didn't test much of this operations
+    if LooseVersion(tf.__version__) >= LooseVersion('1.12.0'):
+        transforms = [
+            'strip_unused_nodes(type=float, shape="1,299,299,3")',
+            'remove_nodes(op=Identity, op=CheckNumerics)'
+            'fold_constants(ignore_errors=true)',
+            'fold_batch_norms',
+            'fold_old_batch_norms'
+        ]
+    else:
+        print('[WARNING] Tensorflow version {} (< 1.12.0), some optimization disabled.'.format(tf.__version__))
+        transforms = [
+            'strip_unused_nodes(type=float, shape="1,299,299,3")',
+            'remove_nodes(op=CheckNumerics)'
+            'fold_constants(ignore_errors=true)',
+            'fold_batch_norms',
+            'fold_old_batch_norms'
+        ]
     
     graph_def_optimized = TransformGraph(graph_def, input_names, output_names, transforms)
     
