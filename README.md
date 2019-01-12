@@ -15,6 +15,7 @@
     - [Google Colab](#google-colab)
 - [Export Model](#export-model)
   - [Converting for Tensorflow 1.3](#converting-for-tensorflow-13)
+  - [Optimization](#optimization)
 - [Evaluation](#evaluation)
 
 Overview
@@ -527,6 +528,22 @@ To convert the model we use the following procedure (using conda and tensorflow 
     python object_detection/export_inference_graph.py --input_type=image_tensor --pipeline_config_path=../config/ssd_inception_v2.config --trained_checkpoint_prefix=../models/fine_tuned/ssd_inception_v2/model.ckpt-20000 --output_directory=../models/converted/ssd_inception_v2
     ```
 
+### Optimization
+
+Once the model is frozen, its variables are turned into constants. Additionally we can perform various optimizations to increase the inference throughput, for example removing unused variables or folding operations (See the [documentation](https://github.com/tensorflow/tensorflow/blob/master/tensorflow/tools/graph_transforms/README.md) for the graph transforms for more details).
+
+The repository includes a small [utility](./optmize_graph/py) that allows to run such optimizations, note that we can run the optimizations on both the exported frozen graph or on the converted one for tensorflow 1.3, just making sure to use the correct version of tensorflow when doing so:
+
+```sh
+$ python optimize_graph.py --model_path=models/converted/ssd_mobilenet_v2/frozen_inference_graph.pb --output_dir=models/optimized/ssd_mobilenet_v2
+```
+
+For example for ssd_mobilenet_v2, optimizing the converted graph using tensorflow 1.4 yields interesting resutls:
+
+|            | Constant Count | Identity Count | Total Nodes |
+|------------|----------------|----------------|-------------|
+| **Before** | 1116           | 468            | 2745        |
+| **After**  | 487            | 4              | 1150        | 
 
 Evaluation
 ---
