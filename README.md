@@ -561,14 +561,19 @@ a [jupyter notebook is included](./notebooks/evaluation.ipynb) that simply runs 
 |---------------------------------------------|-----------------------------------------------------|------|
 | Intel I7 8650U (base@2.11GHz, boost@4.2GHz) | Nvidia GTX 1050 2GB (base@1.354GHz, boost@1.493GHz) | 16GB |
 
-The accuracy is measured on both images from the *simulator* and images from the *test site*:
-
-| Model                      | Accuracy (Simulator) | Accuracy (Test Site) | Avg Time (GPU) | FPS (GPU) | Avg Time (CPU) | FPS (CPU) |
-|----------------------------|----------------------|----------------------|----------------|-----------|----------------|-----------|
-| ssd_mobilenet_v1           |                      |                      |                |           |                |           |
-| ssd_mobilenet_v1           |                      |                      |                |           |                |           |
-| ssdlite_mobilenet_v2       |                      |                      |                |           |                |           |
-| ssd_inception_v2           |                      |                      |                |           |                |           |
-| **ssd_inception_v2_sim\*** |                      |                      |                |           |                |           |
+The accuracy is measured on both images from the *simulator* and images from the *Carla test site*, we additionally report the GPU and CPU time and FPS for both the exported (frozen) graphs and the optimized version:
+ 
+| Model                      |                Acc (Sim)               |               Acc (Site)               |                  GPU Time (ms)                 |                     Optimized                    |                 CPU Time (ms)                |                     Optimized                    |
+|----------------------------|:--------------------------------------:|:--------------------------------------:|:----------------------------------------------:|:------------------------------------------------:|:--------------------------------------------:|:------------------------------------------------:|
+| ssd_mobilenet_v1           |  <span style="color:red">0.958</span>  |                  0.868                 | <span style="color:green">21.6 (46 FPS)</span> | <span style="color:green">19.4 (51.5 FPS)</span> | <span style="color:green">66 (15 FPS)</span> | <span style="color:green">60.8 (16.4 FPS)</span> |
+| ssd_mobilenet_v2           |                  0.970                 | <span style="color:green">0.938</span> | <span style="color:green">21.6 (46 FPS)</span> | <span style="color:green">19.5 (51.2 FPS)</span> | <span style="color:green">67 (15 FPS)</span> | <span style="color:green">56.4 (17.7 FPS)</span> |
+| ssdlite_mobilenet_v2       | <span style="color:green">0.996</span> |                  0.860                 |                  25.4 (39 FPS)                 |                  23.1 (42.5 FPS)                 |                 74 (13.5 FPS)                |                   57 (17.5 FPS)                  |
+| ssd_inception_v2           |                  0.996                 |                  0.888                 |  <span style="color:red">34.6 (29 FPS)</span>  |  <span style="color:red">29.7 (33.6 FPS)</span>  | <span style="color:red">130 (7.7 FPS)</span> |  <span style="color:red">135.4 (7.3 FPS)</span>  |
+| **ssd_inception_v2_sim\*** |                  0.996                 |  <span style="color:red">0.303</span>  |                  34.1 (29 FPS)                 |                        N/A                       |                 139 (7.7 FPS)                |                        N/A                       |
 
 **\*** Trained on simulator images only
+
+Note that we also performed a test training ssd with the inception feature extractor trained only on simulator images, as expected the model does not generalize much and fails on the images coming from the carla test site.
+
+The ssd_mobilenet_v2 improves a lot in accuracy in respect to the previous version retaining the same performance. Interestingly ssd_mobilenet_V2 is capable of generalizing better than ssd_inception_v2 despite the smaller network.
+
