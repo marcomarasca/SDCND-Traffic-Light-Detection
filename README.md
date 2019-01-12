@@ -16,6 +16,7 @@
 - [Export Model](#export-model)
   - [Converting for Tensorflow 1.3](#converting-for-tensorflow-13)
   - [Optimization](#optimization)
+  - [Included Models](#included-models)
 - [Evaluation](#evaluation)
 
 Overview
@@ -544,6 +545,18 @@ For example for ssd_mobilenet_v2, optimizing the converted graph using tensorflo
 |------------|----------------|----------------|-------------|
 | **Before** | 1116           | 468            | 2745        |
 | **After**  | 487            | 4              | 1150        | 
+
+### Included Models
+
+The repository contains the various models under the [saved_models](./saved_models) folder:
+
+```
+saved_models
+    L exported              # The fine tuned models (checkpoint + frozen graph)
+    L exported_optimized    # The optimized models (frozen graph)
+    L converted             # Exported models converted for tf 1.3 (frozen graph)
+    L converted_optimized   # The optimized version of the converted models (frozen graph)
+```
 
 Evaluation
 ---
