@@ -581,27 +581,23 @@ All the models were trained with a similar configuration and the following commo
 For the evaluation of the model we are interested in the classification of the images rather than the IOU of the predicted box,
 a [jupyter notebook is included](./notebooks/evaluation.ipynb) that simply runs the trained models on the set of images and computes the accuracy (in terms of correctly classified samples/total samples). The evaluation includes also "background" images that do not contain any traffic light to test for false positives. The following system configuration was used for the evaluation:
 
-| CPU                                         | GPU                                                 | RAM  |
-|---------------------------------------------|-----------------------------------------------------|------|
-| Intel I7 8650U (base@2.11GHz, boost@4.2GHz) | Nvidia GTX 1050 2GB (base@1.354GHz, boost@1.493GHz) | 16GB |
-
-The accuracy is measured on both images from the *simulator* and images from the *Carla test site*, we additionally report the GPU and CPU time and FPS for both the exported (frozen) graphs and the optimized version:
- 
-| Model                            |                Acc (Sim)               |               Acc (Site)               |                  GPU Time (ms)                 |                     Optimized                    |                 CPU Time (ms)                 |                     Optimized                    |
-|----------------------------------|:--------------------------------------:|:--------------------------------------:|:----------------------------------------------:|:------------------------------------------------:|:---------------------------------------------:|:------------------------------------------------:|
-| ssd_mobilenet_v1                 |  <span style="color:red">0.958</span>  |                  0.868                 | <span style="color:green">21.6 (46 FPS)</span> | <span style="color:green">19.4 (51.5 FPS)</span> |  <span style="color:green">66 (15 FPS)</span> | <span style="color:green">60.8 (16.4 FPS)</span> |
-| ssd_mobilenet_v2                 |                  0.970                 |                  0.938                 | <span style="color:green">21.6 (46 FPS)</span> | <span style="color:green">19.5 (51.2 FPS)</span> |  <span style="color:green">67 (15 FPS)</span> | <span style="color:green">56.4 (17.7 FPS)</span> |
-| ssdlite_mobilenet_v2             | <span style="color:green">0.996</span> |                  0.860                 |                  25.4 (39 FPS)                 |                  23.1 (42.5 FPS)                 |                 74 (13.5 FPS)                 |                   57 (17.5 FPS)                  |
-| ssd_inception_v2                 |                  0.996                 |                  0.888                 |  <span style="color:red">34.6 (29 FPS)</span>  |  <span style="color:red">29.7 (33.6 FPS)</span>  |  <span style="color:red">130 (7.7 FPS)</span> |  <span style="color:red">135.4 (7.3 FPS)</span>  |
-| **ssd_inception_v2_sim\***       |                  0.996                 |  <span style="color:red">0.303</span>  |                  34.1 (29 FPS)                 |                        N/A                       |                 139 (7.7 FPS)                 |                        N/A                       |
-| extra_ssd_mobilenet_v2**         |                                        |                                        | <span style="color:green">21.6 (46 FPS)</span> | <span style="color:green">19.5 (51.2 FPS)</span> | <span style="color:green">67 (15 FPS)</span>  | <span style="color:green">56.4 (17.7 FPS)</span> |
-| extra_faster_rcnn_inception_v2** |                  0.982                 | <span style="color:green">0.970</span> | <span style="color:red">91.8 (10.8 FPS)</span> | <span style="color:red">86.3 (11.6 FPS)</span>   | <span style="color:red">1028.4 (1 FPS)</span> | <span style="color:red">1032 (1 FPS)</span>      |
+| Model                            |                Acc (Sim)               |               Acc (Site)               |             GPU Time (ms)             |               Optimized               |             CPU Time (ms)             |               Optimized               |
+|----------------------------------|:--------------------------------------:|:--------------------------------------:|:-------------------------------------:|:-------------------------------------:|:-------------------------------------:|:-------------------------------------:|
+| ssd_mobilenet_v1                 |  <span style="color:red">0.958</span>  |                  0.868                 | <span style="color:green">21.6</span> | <span style="color:green">19.4</span> |  <span style="color:green">66</span>  | <span style="color:green">60.8</span> |
+| ssd_mobilenet_v2                 |                  0.970                 |                  0.938                 | <span style="color:green">21.6</span> | <span style="color:green">19.5</span> |  <span style="color:green">67</span>  | <span style="color:green">56.4</span> |
+| ssdlite_mobilenet_v2             |                  0.996                 |                  0.860                 |                  25.4                 |                  23.1                 |                   74                  |                   57                  |
+| ssd_inception_v2                 |                  0.996                 |                  0.888                 |  <span style="color:red">34.6</span>  |  <span style="color:red">29.7</span>  |   <span style="color:red">130</span>  |  <span style="color:red">135.4</span> |
+| **ssd_inception_v2_sim\***       |                  0.996                 |  <span style="color:red">0.303</span>  |                  34.1                 |                  N/A                  |                  139                  |                  N/A                  |
+| extra_ssd_mobilenet_v2**         | <span style="color:green">0.996</span> |                  0.946                 | <span style="color:green">21.6</span> | <span style="color:green">19.5</span> | <span style="color:green">67</span>   | <span style="color:green">56.4</span> |
+| extra_faster_rcnn_inception_v2** |                  0.982                 | <span style="color:green">0.970</span> | <span style="color:red">91.8</span>   | <span style="color:red">86.3</span>   | <span style="color:red">1028.4</span> | <span style="color:red">1032</span>   |
 
 **\*** Trained on simulator images only
 **\*\*** Trained with the extra images dataset
 
 Note that we also performed a test training ssd with the inception feature extractor trained only on simulator images, as expected the model does not generalize much and fails on the images coming from the carla test site.
 
-The ssd_mobilenet_v2 improves a lot in accuracy in respect to the previous version retaining the same performance. Interestingly ssd_mobilenet_V2 is capable of generalizing better than ssd_inception_v2 despite the smaller network.
+The ssd_mobilenet_v2 improves a lot in accuracy in respect to the previous version retaining the same performance. The model can run in real time, consuming in average 21.6 ms of GPU time (~46 FPS) with the optimized model improving a little with 19.5 ms (~51.2 FPS). Interestingly the model is capable of generalizing better than ssd_inception_v2 despite the smaller network.
 
-Faster rcnn with inception reaches the best accuracy on the test (unseen) test when trained with extra images but takes a toll on the system obtaining relaively poor performance in terms of inference speed.
+An addiotonal pass was done integrating a few additional images from an extra run on the testing lot of Carla that produced very birght and flared images, training the model using the this dataset increased the accuracy of ssd_mobilenet_v2 on both the simulator and the real images.
+
+The extra_faster_rcnn_inception_v2 model reaches the best accuracy on the test (unseen) set but takes a toll on the system obtaining relatively poor performance in terms of inference speed (86.3 ms ~11.6 FPS).
