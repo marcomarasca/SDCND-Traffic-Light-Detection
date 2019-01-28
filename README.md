@@ -572,6 +572,8 @@ saved_models
 Evaluation
 ---
 
+![alt text](./images/res_extra_ssd_mobilenet.jpg)
+
 All the models were trained with a similar configuration and the following common parameters:
 
 | Batch Size | Steps | Learning Rate | Anchors Min Scale | Anchors Max Scale | Anchors Aspect Ratio |
@@ -601,3 +603,4 @@ The ssd_mobilenet_v2 improves a lot in accuracy in respect to the previous versi
 An addiotonal pass was done integrating a few additional images from an extra run on the testing lot of Carla that produced very birght and flared images, training the model using the this dataset increased the accuracy of ssd_mobilenet_v2 on both the simulator and the real images.
 
 The extra_faster_rcnn_inception_v2 model reaches the best accuracy on the test (unseen) set but takes a toll on the system obtaining relatively poor performance in terms of inference speed (86.3 ms ~11.6 FPS).
+
