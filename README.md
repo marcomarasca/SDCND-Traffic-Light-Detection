@@ -50,15 +50,17 @@ The dataset is composed of images coming from 4 source:
     ![alt text](./images/uda_training_g.jpg)![alt text](./images/uda_training_r.jpg)
     ![alt text](./images/uda_training_y.jpg)![alt text](./images/uda_training_u.jpg)
 
-* A **traffic lights bag** file file with a video of traffic lights only, recorded on the Carla testing site ([Download](https://drive.google.com/file/d/0B2_h37bMVw3iYkdJTlRSUlJIamM/view?usp=sharing))
+* A **traffic lights bag** file with a video of traffic lights only, recorded on the Carla testing site ([Download](https://drive.google.com/file/d/0B2_h37bMVw3iYkdJTlRSUlJIamM/view?usp=sharing))
 
     ![alt text](./images/uda_lights_g.jpg)![alt text](./images/uda_lights_r.jpg)
     ![alt text](./images/uda_lights_y.jpg)![alt text](./images/uda_lights_u.jpg)
 
-* A **loop bag** file file with a video of a complete loop, recorded on the Carla testing site ([Download (Same as above)](https://drive.google.com/file/d/0B2_h37bMVw3iYkdJTlRSUlJIamM/view?usp=sharing))
+* A **loop bag** file with a video of a complete loop, recorded on the Carla testing site ([Download (Same as above)](https://drive.google.com/file/d/0B2_h37bMVw3iYkdJTlRSUlJIamM/view?usp=sharing))
 
     ![alt text](./images/uda_loop_g.jpg)![alt text](./images/uda_loop_r.jpg)
     ![alt text](./images/uda_loop_u.jpg)![alt text](./images/uda_loop_u_2.jpg)
+
+* An additional **test run bag** file with a video of a complete loop, recorded at the test site on a very sunny day with a lot of flare.
 
 The images manually annotated were labelled with [LabelImg](https://github.com/tzutalin/labelImg) while for the **semi-automatic annotation** a small [utility](./label_data.py) is included that runs one of the tensorflow pretrained models on a set of images capturing the bounding boxes and labelling them with a predefined label:
 
@@ -90,24 +92,32 @@ simulator
     L simulator_eval.record
     L simulator_train.record
     L simulator.zip
+extra
+    L extra.zip
 mixed_eval.record
 mixed_train.record
+extra_mixed_eval.record
+extra_mixed_train.record
 ```
 
 The `mixed_eval.record` and `mixed_train.record` are the record files used for training the models; they contain images from the **simulator**, from the **training bag** provided by udacity and from the **traffic lights bag** on Carla site, they do not contain any image extracted from the *loop bag* recorded on the carla site as it is used for testing the models later on.
 
 The carla.zip contains images for training and testing, the latter contains the images from the **loop bag** on the Carla site, while the former contains a mix of images from the **training bad** and the **traffic lights bag**.
 
+The extra.zip archive contains additional images taken from a run on the Carla test lot on a bright sunny day with a lot of flares, the `extra_mixed_eval.record` and `extra_mixed_train.record` files are the record files that contains the samples including the this additional images.
+
 #### Statistics
 
 In the following the statistics of the dataset used (does not include images without traffic lights):
 
-| Dataset        | Samples | Training | Evaluation |
-|----------------|---------|----------|------------|
-| Simulator      | 422     | 316      | 106        |
-| Carla Training | 1411    | 1058     | 353        |
-| Carla Testing  | 254     | N/A      | N/A        |
-| **Sim + Carla**| **1833**| **1374** | **459**    |
+| Dataset                 | Samples | Training | Evaluation |
+|-------------------------|---------|----------|------------|
+| Simulator               | 422     | 316      | 106        |
+| Carla Training          | 1411    | 1058     | 353        |
+| Carla Testing           | 254     | N/A      | N/A        |
+| Carla Extra             | 304     | N/A      | N/A        |
+| **Sim + Carla**         | **1833**| **1374** | **459**    |
+| **Sim + Carla + Extra** | **2137**| **1709** | **428**    |
 
 Training
 ---
@@ -124,6 +134,7 @@ The models that we took into consideration come from the [model zoo](https://git
 | [ssd_mobilenet_v2_coco](http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v2_coco_2018_03_29.tar.gz) | 31 | 22 | [Download](https://raw.githubusercontent.com/tensorflow/models/master/research/object_detection/samples/configs/ssd_mobilenet_v2_coco.config) | [Download](https://raw.githubusercontent.com/Az4z3l/CarND-Traffic-Light-Detection/master/config/ssd_mobilenet_v2.config)
 | [ssd_inception_v2_coco](http://download.tensorflow.org/models/object_detection/ssd_inception_v2_coco_2018_01_28.tar.gz) | 42 | 24 | [Download](https://raw.githubusercontent.com/tensorflow/models/master/research/object_detection/samples/configs/ssd_inception_v2_coco.config) | [Download](https://raw.githubusercontent.com/Az4z3l/CarND-Traffic-Light-Detection/master/config/ssd_inception_v2.config)
 | [ssdlite_mobilenet_v2_coco](http://download.tensorflow.org/models/object_detection/ssdlite_mobilenet_v2_coco_2018_05_09.tar.gz) | 27 | 22 | [Download](https://raw.githubusercontent.com/tensorflow/models/master/research/object_detection/samples/configs/ssdlite_mobilenet_v2_coco.config) | [Download](https://raw.githubusercontent.com/Az4z3l/CarND-Traffic-Light-Detection/master/config/ssdlite_mobilenet_v2.config)
+| [faster_rcnn_inception_v2_coco](http://download.tensorflow.org/models/object_detection/faster_rcnn_inception_v2_coco_2018_01_28.tar.gz) | 58 | 28 | [Download](https://raw.githubusercontent.com/tensorflow/models/master/research/object_detection/samples/configs/faster_rcnn_inception_v2_coco.config) | [Download](https://raw.githubusercontent.com/Az4z3l/CarND-Traffic-Light-Detection/master/config/faster_rcnn_inception_v2.config)
 
 #### Configuration Files
 
@@ -576,15 +587,18 @@ a [jupyter notebook is included](./notebooks/evaluation.ipynb) that simply runs 
 
 The accuracy is measured on both images from the *simulator* and images from the *Carla test site*, we additionally report the GPU and CPU time and FPS for both the exported (frozen) graphs and the optimized version:
  
-| Model                      |                Acc (Sim)               |               Acc (Site)               |                  GPU Time (ms)                 |                     Optimized                    |                 CPU Time (ms)                |                     Optimized                    |
-|----------------------------|:--------------------------------------:|:--------------------------------------:|:----------------------------------------------:|:------------------------------------------------:|:--------------------------------------------:|:------------------------------------------------:|
-| ssd_mobilenet_v1           |  <span style="color:red">0.958</span>  |                  0.868                 | <span style="color:green">21.6 (46 FPS)</span> | <span style="color:green">19.4 (51.5 FPS)</span> | <span style="color:green">66 (15 FPS)</span> | <span style="color:green">60.8 (16.4 FPS)</span> |
-| ssd_mobilenet_v2           |                  0.970                 | <span style="color:green">0.938</span> | <span style="color:green">21.6 (46 FPS)</span> | <span style="color:green">19.5 (51.2 FPS)</span> | <span style="color:green">67 (15 FPS)</span> | <span style="color:green">56.4 (17.7 FPS)</span> |
-| ssdlite_mobilenet_v2       | <span style="color:green">0.996</span> |                  0.860                 |                  25.4 (39 FPS)                 |                  23.1 (42.5 FPS)                 |                 74 (13.5 FPS)                |                   57 (17.5 FPS)                  |
-| ssd_inception_v2           |                  0.996                 |                  0.888                 |  <span style="color:red">34.6 (29 FPS)</span>  |  <span style="color:red">29.7 (33.6 FPS)</span>  | <span style="color:red">130 (7.7 FPS)</span> |  <span style="color:red">135.4 (7.3 FPS)</span>  |
-| **ssd_inception_v2_sim\*** |                  0.996                 |  <span style="color:red">0.303</span>  |                  34.1 (29 FPS)                 |                        N/A                       |                 139 (7.7 FPS)                |                        N/A                       |
+| Model                            |                Acc (Sim)               |               Acc (Site)               |                  GPU Time (ms)                 |                     Optimized                    |                 CPU Time (ms)                |                     Optimized                    |
+|----------------------------------|:--------------------------------------:|:--------------------------------------:|:----------------------------------------------:|:------------------------------------------------:|:--------------------------------------------:|:------------------------------------------------:|
+| ssd_mobilenet_v1                 |  <span style="color:red">0.958</span>  |                  0.868                 | <span style="color:green">21.6 (46 FPS)</span> | <span style="color:green">19.4 (51.5 FPS)</span> | <span style="color:green">66 (15 FPS)</span> | <span style="color:green">60.8 (16.4 FPS)</span> |
+| ssd_mobilenet_v2                 |                  0.970                 | <span style="color:green">0.938</span> | <span style="color:green">21.6 (46 FPS)</span> | <span style="color:green">19.5 (51.2 FPS)</span> | <span style="color:green">67 (15 FPS)</span> | <span style="color:green">56.4 (17.7 FPS)</span> |
+| ssdlite_mobilenet_v2             | <span style="color:green">0.996</span> |                  0.860                 |                  25.4 (39 FPS)                 |                  23.1 (42.5 FPS)                 |                 74 (13.5 FPS)                |                   57 (17.5 FPS)                  |
+| ssd_inception_v2                 |                  0.996                 |                  0.888                 |  <span style="color:red">34.6 (29 FPS)</span>  |  <span style="color:red">29.7 (33.6 FPS)</span>  | <span style="color:red">130 (7.7 FPS)</span> |  <span style="color:red">135.4 (7.3 FPS)</span>  |
+| **ssd_inception_v2_sim\***       |                  0.996                 |  <span style="color:red">0.303</span>  |                  34.1 (29 FPS)                 |                        N/A                       |                 139 (7.7 FPS)                |                        N/A                       |
+| extra_ssd_mobilenet_v2**         |                                        |                                        | <span style="color:green">21.6 (46 FPS)</span> | <span style="color:green">19.5 (51.2 FPS)</span> | <span style="color:green">67 (15 FPS)</span> | <span style="color:green">56.4 (17.7 FPS)</span> |
+| extra_faster_rcnn_inception_v2** |                                        |                                        |                                                |                                                  |                                              |                                                  |
 
 **\*** Trained on simulator images only
+**\*\*** Trained with the extra images dataset
 
 Note that we also performed a test training ssd with the inception feature extractor trained only on simulator images, as expected the model does not generalize much and fails on the images coming from the carla test site.
 
