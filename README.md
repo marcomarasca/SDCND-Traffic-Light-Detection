@@ -4,24 +4,24 @@
 
 ## Table of Contents <!-- omit in toc --> 
 
-- [Overview](#overview)
-- [Dataset](#dataset)
-    - [Statistics](#statistics)
-- [Training](#training)
-    - [Models](#models)
-    - [Configuration Files](#configuration-files)
-    - [Locally](#locally)
-    - [AWS](#aws)
-    - [Google Colab](#google-colab)
-- [Export Model](#export-model)
-  - [Converting for Tensorflow 1.3](#converting-for-tensorflow-13)
-  - [Optimization](#optimization)
-  - [Included Models](#included-models)
-- [Evaluation](#evaluation)
+- [Overview](#Overview)
+- [Dataset](#Dataset)
+    - [Statistics](#Statistics)
+- [Training](#Training)
+    - [Models](#Models)
+    - [Configuration Files](#Configuration-Files)
+    - [Locally](#Locally)
+    - [AWS](#AWS)
+    - [Google Colab](#Google-Colab)
+- [Export Model](#Export-Model)
+  - [Converting for Tensorflow 1.3](#Converting-for-Tensorflow-13)
+  - [Optimization](#Optimization)
+  - [Included Models](#Included-Models)
+- [Evaluation](#Evaluation)
 
 Overview
 ---
-The repository contains the instructions and links to the datasets for the pipeline used in training an *object detector* for traffic lights to be integrated into the final [Capstone project](https://github.com/marcomarasca/CarND-SuperAI-Capstone) of the Udacity Self Driving Car Nanodegree.
+The repository contains the instructions and links to the datasets for the pipeline used in training an *object detector* for traffic lights to be integrated into the final [Capstone project](https://github.com/marcomarasca/SDCND-SuperAI-Capstone) of the Udacity Self Driving Car Nanodegree.
 
 The project requires to detect traffic lights from the image send by the onboard camera and classify the detections into the 3 available categories: green, yellow and red so that the car can decide on how to behave in proximity of traffic lights.
 
